@@ -13,7 +13,7 @@ A comprehensive real estate website built with HTML, CSS, and JavaScript, featur
 - ⭐ User reviews and testimonials
 
 ### Admin Features
-- 🔐 Admin dashboard with login (rvgproperties@gmail.com / RVG@admin)
+- 🔐 Admin dashboard with login 
 - 📊 Analytics and statistics
 - ✅ Property approval workflow
 - 👥 User management
