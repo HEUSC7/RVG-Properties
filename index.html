@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVG Properties - Find Your Dream Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Admin Notification System -->
+    <div id="adminNotifications" class="admin-notifications hidden">
+        <div class="notification-item">
+            <i class="fas fa-check-circle notification-icon success"></i>
+            <span class="notification-message">Property approved successfully!</span>
+            <button class="notification-close">&times;</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                <div class="header__logo">
+                    <div class="logo-container">
+                        <div class="logo-circle">
+                            <span class="logo-text">RVG</span>
+                        </div>
+                        <h2>RVG Properties</h2>
+                    </div>
+                </div>
+                <nav class="header__nav" id="mainNav">
+                    <a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Home</a>
+                    <a href="#" class="nav-link" data-page="buy"><i class="fas fa-shopping-cart"></i> Buy</a>
+                    <a href="#" class="nav-link" data-page="rent"><i class="fas fa-key"></i> Rent</a>
+                    <a href="#" class="nav-link" data-page="commercial"><i class="fas fa-building"></i> Commercial</a>
+                    <a href="#" class="nav-link" data-page="post-property"><i class="fas fa-plus-circle"></i> Post Property</a>
+                </nav>
+                <div class="header__actions" id="headerActions">
+                    <button class="btn btn--outline btn--sm" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+                    <button class="btn btn--primary btn--sm" id="registerBtn"><i class="fas fa-user-plus"></i> Register</button>
+                </div>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Toolbar (Only visible for admin users) -->
+    <div id="adminToolbar" class="admin-toolbar hidden">
+        <div class="container">
+            <div class="admin-toolbar-content">
+                <div class="admin-quick-stats">
+                    <div class="quick-stat">
+                        <i class="fas fa-clock text-warning"></i>
+                        <span id="pendingCount">0</span> Pending
+                    </div>
+                    <div class="quick-stat">
+                        <i class="fas fa-envelope text-info"></i>
+                        <span id="newInquiriesCount">0</span> New Inquiries
+                    </div>
+                </div>
+                <div class="admin-quick-actions">
+                    <button class="btn btn--sm btn--success" onclick="showBulkApprovalModal()">
+                        <i class="fas fa-check-double"></i> Bulk Approve
+                    </button>
+                    <button class="btn btn--sm btn--primary" onclick="showAddContentModal()">
+                        <i class="fas fa-plus"></i> Add Content
+                    </button>
+                    <button class="btn btn--sm btn--outline" onclick="refreshAdminData()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Home Page -->
+        <div id="homePage" class="page active">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="container">
+                    <div class="hero__content">
+                        <h1 class="hero__title">Find Your Perfect Property</h1>
+                        <p class="hero__subtitle">Discover thousands of properties for buy and rent</p>
+                        
+                        <!-- Search Form -->
+                        <form class="search-form" id="propertySearchForm">
+                            <div class="search-form__tabs">
+                                <button type="button" class="search-tab active" data-type="Buy">Buy</button>
+                                <button type="button" class="search-tab" data-type="Rent">Rent</button>
+                            </div>
+                            <div class="search-form__fields">
+                                <div class="search-field">
+                                    <label>Location</label>
+                                    <select id="searchLocation" class="form-control">
+                                        <option value="">Select City</option>
+                                        <option value="Mumbai">Mumbai</option>
+                                        <option value="Bangalore">Bangalore</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Gurgaon">Gurgaon</option>
+                                        <option value="Pune">Pune</option>
+                                        <option value="Hyderabad">Hyderabad</option>
+                                        <option value="Chennai">Chennai</option>
+                                        <option value="Kolkata">Kolkata</option>
+                                        <option value="Ahmedabad">Ahmedabad</option>
+                                        <option value="Noida">Noida</option>
+                                    </select>
+                                </div>
+                                <div class="search-field">
+                                    <label>Property Type</label>
+                                    <select id="searchType" class="form-control">
+                                        <option value="">All Types</option>
+                                        <option value="1BHK">1BHK</option>
+                                        <option value="2BHK">2BHK</option>
+                                        <option value="3BHK">3BHK</option>
+                                        <option value="4BHK+">4BHK+</option>
+                                    </select>
+                                </div>
+                                <div class="search-field">
+                                    <label>Budget</label>
+                                    <select id="searchBudget" class="form-control">
+                                        <option value="">Any Budget</option>
+                                        <option value="0-10000000">Under â¹1 Cr</option>
+                                        <option value="10000000-25000000">â¹1-2.5 Cr</option>
+                                        <option value="25000000-50000000">â¹2.5-5 Cr</option>
+                                        <option value="50000000-999999999">Above â¹5 Cr</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn--primary search-btn">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Properties -->
+            <section class="featured-properties">
+                <div class="container">
+                    <h2 class="section-title">Featured Properties</h2>
+                    <div class="properties-grid" id="featuredProperties">
+                        <!-- Properties will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Popular Locations -->
+            <section class="popular-locations">
+                <div class="container">
+                    <h2 class="section-title">Popular Locations</h2>
+                    <div class="locations-grid">
+                        <div class="location-card" data-city="Mumbai">
+                            <i class="fas fa-city location-icon"></i>
+                            <h3>Mumbai</h3>
+                            <p>2 Properties</p>
+                        </div>
+                        <div class="location-card" data-city="Bangalore">
+                            <i class="fas fa-city location-icon"></i>
+                            <h3>Bangalore</h3>
+                            <p>2 Properties</p>
+                        </div>
+                        <div class="location-card" data-city="Gurgaon">
+                            <i class="fas fa-city location-icon"></i>
+                            <h3>Gurgaon</h3>
+                            <p>1 Property</p>
+                        </div>
+                        <div class="location-card" data-city="Delhi">
+                            <i class="fas fa-city location-icon"></i>
+                            <h3>Delhi</h3>
+                            <p>Explore Properties</p>
+                        </div>
+                        <div class="location-card" data-city="Pune">
+                            <i class="fas fa-city location-icon"></i>
+                            <h3>Pune</h3>
+                            <p>Explore Properties</p>
+                        </div>
+                        <div class="location-card" data-city="Hyderabad">
+                            <i class="fas fa-city location-icon"></i>
+                            <h3>Hyderabad</h3>
+                            <p>Explore Properties</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials -->
+            <section class="testimonials">
+                <div class="container">
+                    <h2 class="section-title">What Our Clients Say</h2>
+                    <div class="testimonials-grid" id="testimonialsGrid">
+                        <!-- Testimonials will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Property Listings Page -->
+        <div id="propertyListingsPage" class="page">
+            <div class="container">
+                <div class="listings-header">
+                    <h2><i class="fas fa-list"></i> Property Listings</h2>
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid"><i class="fas fa-th"></i> Grid</button>
+                        <button class="view-btn" data-view="list"><i class="fas fa-list"></i> List</button>
+                    </div>
+                </div>
+                
+                <div class="listings-content">
+                    <aside class="filters-sidebar">
+                        <div class="filters">
+                            <h3><i class="fas fa-filter"></i> Filters</h3>
+                            
+                            <div class="filter-group">
+                                <label>Property For</label>
+                                <select id="filterForType" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="Buy">Buy</option>
+                                    <option value="Rent">Rent</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label>Property Type</label>
+                                <select id="filterType" class="form-control">
+                                    <option value="">All Types</option>
+                                    <option value="1BHK">1BHK</option>
+                                    <option value="2BHK">2BHK</option>
+                                    <option value="3BHK">3BHK</option>
+                                    <option value="4BHK">4BHK+</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label>Location</label>
+                                <select id="filterLocation" class="form-control">
+                                    <option value="">All Cities</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="Bangalore">Bangalore</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Gurgaon">Gurgaon</option>
+                                    <option value="Pune">Pune</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label>Furnishing</label>
+                                <select id="filterFurnishing" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="Fully Furnished">Fully Furnished</option>
+                                    <option value="Semi-Furnished">Semi-Furnished</option>
+                                    <option value="Unfurnished">Unfurnished</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label>Status</label>
+                                <select id="filterStatus" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="Ready to move">Ready to move</option>
+                                    <option value="Under Construction">Under Construction</option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn--primary btn--full-width" id="applyFilters">
+                                <i class="fas fa-check"></i> Apply Filters
+                            </button>
+                            <button class="btn btn--outline btn--full-width" id="clearFilters">
+                                <i class="fas fa-times"></i> Clear All
+                            </button>
+                        </div>
+                    </aside>
+
+                    <div class="listings-main">
+                        <div class="listings-toolbar">
+                            <div class="results-count" id="resultsCount">0 Properties Found</div>
+                            <select id="sortBy" class="form-control">
+                                <option value="relevance">Sort by Relevance</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="newest">Newest First</option>
+                            </select>
+                        </div>
+                        
+                        <div class="properties-container" id="propertiesContainer">
+                            <!-- Properties will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Property Detail Page -->
+        <div id="propertyDetailPage" class="page">
+            <div class="container">
+                <div id="propertyDetailContent">
+                    <!-- Property details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Post Property Page -->
+        <div id="postPropertyPage" class="page">
+            <div class="container">
+                <div class="post-property-wrapper">
+                    <h2><i class="fas fa-plus-circle"></i> Post Your Property</h2>
+                    <p class="post-property-subtitle">Fill in the details to list your property. It will be reviewed by our team before going live.</p>
+                    
+                    <form class="post-property-form" id="postPropertyForm">
+                        <div class="form-steps">
+                            <div class="step-indicator">
+                                <div class="step active">1</div>
+                                <div class="step">2</div>
+                                <div class="step">3</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 1: Basic Details -->
+                        <div class="form-step active" data-step="1">
+                            <h3><i class="fas fa-info-circle"></i> Basic Property Details</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Property Title *</label>
+                                <input type="text" name="title" class="form-control" required placeholder="e.g., Luxury 3BHK Apartment in Bandra">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Property Type *</label>
+                                    <select name="type" class="form-control" required>
+                                        <option value="">Select Type</option>
+                                        <option value="1BHK">1BHK</option>
+                                        <option value="2BHK">2BHK</option>
+                                        <option value="3BHK">3BHK</option>
+                                        <option value="4BHK">4BHK+</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Category *</label>
+                                    <select name="category" class="form-control" required>
+                                        <option value="">Select Category</option>
+                                        <option value="Apartment">Apartment</option>
+                                        <option value="Villa">Villa</option>
+                                        <option value="House">House</option>
+                                        <option value="Studio">Studio</option>
+                                        <option value="Penthouse">Penthouse</option>
+                                        <option value="Plot">Plot</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Property For *</label>
+                                    <select name="forType" class="form-control" required>
+                                        <option value="">Select</option>
+                                        <option value="Buy">Buy</option>
+                                        <option value="Rent">Rent</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Price (â¹) *</label>
+                                    <input type="number" name="price" class="form-control" required placeholder="e.g., 2500000">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Area (sq ft) *</label>
+                                    <input type="number" name="area" class="form-control" required placeholder="e.g., 1200">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Furnishing *</label>
+                                    <select name="furnishing" class="form-control" required>
+                                        <option value="">Select</option>
+                                        <option value="Fully Furnished">Fully Furnished</option>
+                                        <option value="Semi-Furnished">Semi-Furnished</option>
+                                        <option value="Unfurnished">Unfurnished</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Location & Details -->
+                        <div class="form-step" data-step="2">
+                            <h3><i class="fas fa-map-marker-alt"></i> Location & Additional Details</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Complete Address *</label>
+                                <input type="text" name="location" class="form-control" required placeholder="e.g., Bandra West, Mumbai">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Parking</label>
+                                    <select name="parking" class="form-control">
+                                        <option value="">Select</option>
+                                        <option value="1 Covered">1 Covered</option>
+                                        <option value="2 Covered">2 Covered</option>
+                                        <option value="3 Covered">3 Covered</option>
+                                        <option value="1 Open">1 Open</option>
+                                        <option value="2 Open">2 Open</option>
+                                        <option value="No Parking">No Parking</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Property Age</label>
+                                    <select name="age" class="form-control">
+                                        <option value="">Select</option>
+                                        <option value="Under Construction">Under Construction</option>
+                                        <option value="1 year">1 year</option>
+                                        <option value="2 years">2 years</option>
+                                        <option value="3 years">3 years</option>
+                                        <option value="5 years">5 years</option>
+                                        <option value="10+ years">10+ years</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-control">
+                                    <option value="Ready to move">Ready to move</option>
+                                    <option value="Under Construction">Under Construction</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Amenities</label>
+                                <div class="amenities-grid">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="amenities" value="Swimming Pool">
+                                        <span><i class="fas fa-swimming-pool"></i> Swimming Pool</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="amenities" value="Gym">
+                                        <span><i class="fas fa-dumbbell"></i> Gym</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="amenities" value="Security">
+                                        <span><i class="fas fa-shield-alt"></i> Security</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="amenities" value="Power Backup">
+                                        <span><i class="fas fa-bolt"></i> Power Backup</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="amenities" value="Elevator">
+                                        <span><i class="fas fa-arrows-alt-v"></i> Elevator</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="amenities" value="Park">
+                                        <span><i class="fas fa-tree"></i> Park</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="amenities" value="Club House">
+                                        <span><i class="fas fa-home"></i> Club House</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="amenities" value="Kids Play Area">
+                                        <span><i class="fas fa-child"></i> Kids Play Area</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Description & Contact -->
+                        <div class="form-step" data-step="3">
+                            <h3><i class="fas fa-edit"></i> Description & Contact Information</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Property Description *</label>
+                                <textarea name="description" class="form-control" rows="5" required placeholder="Describe your property, highlight key features, nearby amenities..."></textarea>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Your Name *</label>
+                                    <input type="text" name="agentName" class="form-control" required placeholder="Enter your name">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Phone Number *</label>
+                                    <input type="tel" name="phone" class="form-control" required placeholder="+91 12345 67890">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" name="email" class="form-control" required placeholder="your.email@example.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Property Images</label>
+                                <div class="image-upload-area">
+                                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                    <p>Upload up to 5 images of your property</p>
+                                    <input type="file" name="images" multiple accept="image/*" class="form-control">
+                                    <small>Supported formats: JPG, PNG. Max size: 2MB per image</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn--outline" id="prevStep" style="display: none;">
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                            <button type="button" class="btn btn--primary" id="nextStep">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button type="submit" class="btn btn--primary" id="submitProperty" style="display: none;">
+                                <i class="fas fa-check"></i> Submit Property
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Dashboard Page -->
+        <div id="userDashboardPage" class="page">
+            <div class="container">
+                <div class="dashboard-layout">
+                    <aside class="dashboard-sidebar">
+                        <div class="user-profile">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <h3 id="userProfileName">User Dashboard</h3>
+                            <p id="userProfileEmail">user@example.com</p>
+                        </div>
+                        <nav class="dashboard-nav">
+                            <a href="#" class="dashboard-nav-link active" data-section="overview">
+                                <i class="fas fa-tachometer-alt"></i> Overview
+                            </a>
+                            <a href="#" class="dashboard-nav-link" data-section="my-properties">
+                                <i class="fas fa-home"></i> My Properties
+                            </a>
+                            <a href="#" class="dashboard-nav-link" data-section="inquiries">
+                                <i class="fas fa-envelope"></i> Inquiries
+                            </a>
+                            <a href="#" class="dashboard-nav-link" data-section="profile">
+                                <i class="fas fa-user-cog"></i> Profile
+                            </a>
+                        </nav>
+                        <button class="btn btn--outline btn--full-width" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </aside>
+                    <main class="dashboard-main">
+                        <!-- Overview Section -->
+                        <div class="dashboard-section active" data-section="overview">
+                            <h2><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h2>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="userPropertiesCount">0</h3>
+                                        <p>Properties Posted</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="userApprovedCount">0</h3>
+                                        <p>Approved</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-clock text-warning"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="userPendingCount">0</h3>
+                                        <p>Pending</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-envelope text-info"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="userInquiriesCount">0</h3>
+                                        <p>Inquiries Received</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- My Properties Section -->
+                        <div class="dashboard-section" data-section="my-properties">
+                            <div class="section-header">
+                                <h2><i class="fas fa-home"></i> My Properties</h2>
+                                <button class="btn btn--primary" onclick="showPage('postPropertyPage')">
+                                    <i class="fas fa-plus"></i> Post New Property
+                                </button>
+                            </div>
+                            <div id="userPropertiesList">
+                                <!-- User properties will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Inquiries Section -->
+                        <div class="dashboard-section" data-section="inquiries">
+                            <h2><i class="fas fa-envelope"></i> Property Inquiries</h2>
+                            <div id="userInquiriesList">
+                                <!-- User inquiries will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Profile Section -->
+                        <div class="dashboard-section" data-section="profile">
+                            <h2><i class="fas fa-user-cog"></i> Profile Settings</h2>
+                            <form class="profile-form" id="profileForm">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="name" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" name="email" class="form-control" required readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone</label>
+                                    <input type="tel" name="phone" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn--primary">
+                                    <i class="fas fa-save"></i> Update Profile
+                                </button>
+                            </form>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Admin Dashboard Page -->
+        <div id="adminDashboardPage" class="page">
+            <div class="container-fluid">
+                <div class="admin-layout">
+                    <aside class="admin-sidebar" id="adminSidebar">
+                        <div class="admin-sidebar-header">
+                            <div class="admin-logo">
+                                <div class="logo-circle">
+                                    <span class="logo-text">RVG</span>
+                                </div>
+                                <h3>Admin Panel</h3>
+                            </div>
+                            <button class="sidebar-toggle" id="sidebarToggle">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </div>
+                        
+                        <nav class="admin-nav">
+                            <a href="#" class="admin-nav-link active" data-section="overview">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                            <a href="#" class="admin-nav-link" data-section="properties">
+                                <i class="fas fa-building"></i>
+                                <span class="nav-text">Properties</span>
+                                <span class="nav-badge" id="propertiesBadge">0</span>
+                            </a>
+                            <a href="#" class="admin-nav-link" data-section="users">
+                                <i class="fas fa-users"></i>
+                                <span class="nav-text">Users</span>
+                                <span class="nav-badge" id="usersBadge">0</span>
+                            </a>
+                            <a href="#" class="admin-nav-link" data-section="inquiries">
+                                <i class="fas fa-envelope"></i>
+                                <span class="nav-text">Inquiries</span>
+                                <span class="nav-badge" id="inquiriesBadge">0</span>
+                            </a>
+                            <a href="#" class="admin-nav-link" data-section="content">
+                                <i class="fas fa-edit"></i>
+                                <span class="nav-text">Content</span>
+                            </a>
+                            <a href="#" class="admin-nav-link" data-section="analytics">
+                                <i class="fas fa-chart-line"></i>
+                                <span class="nav-text">Analytics</span>
+                            </a>
+                            <a href="#" class="admin-nav-link" data-section="settings">
+                                <i class="fas fa-cog"></i>
+                                <span class="nav-text">Settings</span>
+                            </a>
+                        </nav>
+                        
+                        <div class="admin-sidebar-footer">
+                            <button class="btn btn--outline btn--full-width admin-logout" id="adminLogoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="nav-text">Logout</span>
+                            </button>
+                        </div>
+                    </aside>
+                    
+                    <main class="admin-main">
+                        <!-- Admin Header -->
+                        <div class="admin-header">
+                            <div class="admin-header-left">
+                                <h1 id="adminPageTitle">Dashboard Overview</h1>
+                                <p id="adminPageSubtitle">Welcome back, Administrator</p>
+                            </div>
+                            <div class="admin-header-right">
+                                <div class="admin-header-actions">
+                                    <button class="btn btn--outline btn--sm" onclick="exportData()">
+                                        <i class="fas fa-download"></i> Export
+                                    </button>
+                                    <button class="btn btn--primary btn--sm" onclick="showAddContentModal()">
+                                        <i class="fas fa-plus"></i> Add New
+                                    </button>
+                                </div>
+                                <div class="admin-user-info">
+                                    <div class="admin-avatar">
+                                        <i class="fas fa-user-shield"></i>
+                                    </div>
+                                    <div class="admin-user-details">
+                                        <span class="admin-user-name">RVG Admin</span>
+                                        <span class="admin-user-role">Administrator</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overview Section -->
+                        <div class="admin-section active" data-section="overview">
+                            <div class="admin-stats-grid">
+                                <div class="admin-stat-card primary">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="adminTotalProperties">0</h3>
+                                        <p>Total Properties</p>
+                                        <div class="stat-trend">
+                                            <i class="fas fa-arrow-up text-success"></i>
+                                            <span>+12% from last month</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="admin-stat-card success">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="adminApprovedProperties">0</h3>
+                                        <p>Approved Properties</p>
+                                        <div class="stat-trend">
+                                            <i class="fas fa-arrow-up text-success"></i>
+                                            <span>+8% from last month</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="admin-stat-card warning">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="adminPendingProperties">0</h3>
+                                        <p>Pending Approval</p>
+                                        <div class="stat-trend">
+                                            <i class="fas fa-exclamation-triangle text-warning"></i>
+                                            <span>Needs attention</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="admin-stat-card info">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="adminTotalUsers">0</h3>
+                                        <p>Total Users</p>
+                                        <div class="stat-trend">
+                                            <i class="fas fa-arrow-up text-success"></i>
+                                            <span>+15% from last month</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-cards-grid">
+                                <div class="admin-card">
+                                    <div class="admin-card-header">
+                                        <h3><i class="fas fa-activity"></i> Recent Activities</h3>
+                                        <button class="btn btn--outline btn--xs" onclick="refreshAdminData()">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </div>
+                                    <div class="admin-card-body">
+                                        <div class="recent-activities" id="recentActivities">
+                                            <!-- Recent activities will be loaded here -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="admin-card">
+                                    <div class="admin-card-header">
+                                        <h3><i class="fas fa-exclamation-triangle"></i> Quick Actions</h3>
+                                    </div>
+                                    <div class="admin-card-body">
+                                        <div class="quick-actions-grid">
+                                            <button class="quick-action-btn" onclick="approveAllPending()">
+                                                <i class="fas fa-check-double"></i>
+                                                <span>Approve All Pending</span>
+                                            </button>
+                                            <button class="quick-action-btn" onclick="showAddContentModal()">
+                                                <i class="fas fa-plus-circle"></i>
+                                                <span>Add Content</span>
+                                            </button>
+                                            <button class="quick-action-btn" onclick="exportData()">
+                                                <i class="fas fa-download"></i>
+                                                <span>Export Data</span>
+                                            </button>
+                                            <button class="quick-action-btn" onclick="showSystemSettings()">
+                                                <i class="fas fa-cogs"></i>
+                                                <span>System Settings</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Properties Management -->
+                        <div class="admin-section" data-section="properties">
+                            <div class="admin-section-header">
+                                <div class="section-title-group">
+                                    <h2><i class="fas fa-building"></i> Properties Management</h2>
+                                    <p class="section-subtitle">Manage and approve property listings</p>
+                                </div>
+                                <div class="admin-section-actions">
+                                    <div class="admin-filters">
+                                        <select id="adminPropertyFilter" class="form-control">
+                                            <option value="">All Properties</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="rejected">Rejected</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn--success btn--sm" onclick="showBulkApprovalModal()">
+                                        <i class="fas fa-check-double"></i> Bulk Actions
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-table-container">
+                                <div class="admin-table-header">
+                                    <div class="table-controls-left">
+                                        <label class="bulk-select-all">
+                                            <input type="checkbox" id="selectAllProperties">
+                                            <span>Select All</span>
+                                        </label>
+                                    </div>
+                                    <div class="table-controls-right">
+                                        <div class="table-search">
+                                            <i class="fas fa-search"></i>
+                                            <input type="text" placeholder="Search properties..." id="propertySearch">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th width="40">
+                                                <input type="checkbox" class="bulk-select-all">
+                                            </th>
+                                            <th>Property</th>
+                                            <th>Location</th>
+                                            <th>Price</th>
+                                            <th>Posted By</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminPropertiesTable">
+                                        <!-- Properties will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Users Management -->
+                        <div class="admin-section" data-section="users">
+                            <div class="admin-section-header">
+                                <div class="section-title-group">
+                                    <h2><i class="fas fa-users"></i> Users Management</h2>
+                                    <p class="section-subtitle">Manage user accounts and permissions</p>
+                                </div>
+                                <div class="admin-section-actions">
+                                    <button class="btn btn--primary btn--sm" onclick="addNewUser()">
+                                        <i class="fas fa-user-plus"></i> Add User
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-table-container">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Properties</th>
+                                            <th>Joined</th>
+                                            <th>Last Login</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminUsersTable">
+                                        <!-- Users will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Inquiries Management -->
+                        <div class="admin-section" data-section="inquiries">
+                            <div class="admin-section-header">
+                                <div class="section-title-group">
+                                    <h2><i class="fas fa-envelope"></i> Inquiries Management</h2>
+                                    <p class="section-subtitle">Manage customer inquiries and responses</p>
+                                </div>
+                                <div class="admin-section-actions">
+                                    <select class="form-control" id="inquiryStatusFilter">
+                                        <option value="">All Inquiries</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="responded">Responded</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-table-container">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Property</th>
+                                            <th>Inquirer</th>
+                                            <th>Contact</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminInquiriesTable">
+                                        <!-- Inquiries will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Content Management Section -->
+                        <div class="admin-section" data-section="content">
+                            <div class="admin-section-header">
+                                <div class="section-title-group">
+                                    <h2><i class="fas fa-edit"></i> Content Management</h2>
+                                    <p class="section-subtitle">Manage website content and testimonials</p>
+                                </div>
+                                <div class="admin-section-actions">
+                                    <button class="btn btn--primary btn--sm" onclick="addTestimonial()">
+                                        <i class="fas fa-plus"></i> Add Testimonial
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-cards-grid">
+                                <div class="admin-card">
+                                    <div class="admin-card-header">
+                                        <h3><i class="fas fa-star"></i> Featured Properties</h3>
+                                        <button class="btn btn--outline btn--xs" onclick="manageFeatured()">
+                                            <i class="fas fa-cog"></i> Manage
+                                        </button>
+                                    </div>
+                                    <div class="admin-card-body">
+                                        <div id="featuredPropertiesAdmin">
+                                            <!-- Featured properties will be loaded here -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="admin-card">
+                                    <div class="admin-card-header">
+                                        <h3><i class="fas fa-quote-right"></i> Testimonials</h3>
+                                        <button class="btn btn--outline btn--xs" onclick="manageTestimonials()">
+                                            <i class="fas fa-cog"></i> Manage
+                                        </button>
+                                    </div>
+                                    <div class="admin-card-body">
+                                        <div id="testimonialsAdmin">
+                                            <!-- Testimonials will be loaded here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Analytics Section -->
+                        <div class="admin-section" data-section="analytics">
+                            <div class="admin-section-header">
+                                <div class="section-title-group">
+                                    <h2><i class="fas fa-chart-line"></i> Analytics & Reports</h2>
+                                    <p class="section-subtitle">Performance metrics and insights</p>
+                                </div>
+                                <div class="admin-section-actions">
+                                    <select class="form-control" id="analyticsTimeframe">
+                                        <option value="7">Last 7 days</option>
+                                        <option value="30" selected>Last 30 days</option>
+                                        <option value="90">Last 90 days</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="analytics-grid">
+                                <div class="chart-container" style="position: relative; height: 350px;">
+                                    <canvas id="cityChart"></canvas>
+                                </div>
+                                <div class="chart-container" style="position: relative; height: 350px;">
+                                    <canvas id="typeChart"></canvas>
+                                </div>
+                                <div class="chart-container" style="position: relative; height: 350px;">
+                                    <canvas id="monthlyChart"></canvas>
+                                </div>
+                                <div class="chart-container" style="position: relative; height: 350px;">
+                                    <canvas id="inquiryChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Settings Section -->
+                        <div class="admin-section" data-section="settings">
+                            <div class="admin-section-header">
+                                <div class="section-title-group">
+                                    <h2><i class="fas fa-cog"></i> System Settings</h2>
+                                    <p class="section-subtitle">Configure system preferences</p>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-cards-grid">
+                                <div class="admin-card">
+                                    <div class="admin-card-header">
+                                        <h3><i class="fas fa-shield-alt"></i> Security Settings</h3>
+                                    </div>
+                                    <div class="admin-card-body">
+                                        <div class="settings-group">
+                                            <label class="settings-label">
+                                                <input type="checkbox" checked>
+                                                <span>Enable two-factor authentication</span>
+                                            </label>
+                                            <label class="settings-label">
+                                                <input type="checkbox" checked>
+                                                <span>Auto-approve properties from verified users</span>
+                                            </label>
+                                            <label class="settings-label">
+                                                <input type="checkbox">
+                                                <span>Enable maintenance mode</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="admin-card">
+                                    <div class="admin-card-header">
+                                        <h3><i class="fas fa-bell"></i> Notification Settings</h3>
+                                    </div>
+                                    <div class="admin-card-body">
+                                        <div class="settings-group">
+                                            <label class="settings-label">
+                                                <input type="checkbox" checked>
+                                                <span>Email notifications for new properties</span>
+                                            </label>
+                                            <label class="settings-label">
+                                                <input type="checkbox" checked>
+                                                <span>SMS notifications for urgent inquiries</span>
+                                            </label>
+                                            <label class="settings-label">
+                                                <input type="checkbox" checked>
+                                                <span>Weekly analytics reports</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__section">
+                    <h3>RVG Properties</h3>
+                    <p>Your trusted partner in finding the perfect property. We connect buyers, sellers, and renters across India.</p>
+                </div>
+                <div class="footer__section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#" data-page="buy"><i class="fas fa-shopping-cart"></i> Buy Property</a></li>
+                        <li><a href="#" data-page="rent"><i class="fas fa-key"></i> Rent Property</a></li>
+                        <li><a href="#" data-page="post-property"><i class="fas fa-plus-circle"></i> Post Property</a></li>
+                        <li><a href="#" data-page="home"><i class="fas fa-info-circle"></i> About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer__section">
+                    <h4>Popular Cities</h4>
+                    <ul>
+                        <li><a href="#" data-city="Mumbai"><i class="fas fa-map-marker-alt"></i> Mumbai</a></li>
+                        <li><a href="#" data-city="Bangalore"><i class="fas fa-map-marker-alt"></i> Bangalore</a></li>
+                        <li><a href="#" data-city="Delhi"><i class="fas fa-map-marker-alt"></i> Delhi</a></li>
+                        <li><a href="#" data-city="Gurgaon"><i class="fas fa-map-marker-alt"></i> Gurgaon</a></li>
+                    </ul>
+                </div>
+                <div class="footer__section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> info@rvgproperties.com</p>
+                    <p><i class="fas fa-phone"></i> +91 12345 67890</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Mumbai, India</p>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p>&copy; 2024 RVG Properties. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Enhanced Modals -->
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal hidden">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3><i class="fas fa-sign-in-alt"></i> Login to RVG Properties</h3>
+                <button class="modal__close">&times;</button>
+            </div>
+            <div class="modal__body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <div class="login-help">
+                        <strong>Demo Credentials:</strong><br>
+                        <strong>Admin:</strong> rvgproperties@gmail.com / RVG@admin<br>
+                        <strong>User:</strong> raj.sharma@email.com / user123
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal hidden">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3><i class="fas fa-user-plus"></i> Register with RVG Properties</h3>
+                <button class="modal__close">&times;</button>
+            </div>
+            <div class="modal__body">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-phone"></i> Phone</label>
+                        <input type="tel" name="phone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Admin Modals -->
+    <!-- Property Action Modal -->
+    <div id="propertyActionModal" class="modal hidden">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3 id="actionModalTitle"><i class="fas fa-check-circle"></i> Property Action</h3>
+                <button class="modal__close">&times;</button>
+            </div>
+            <div class="modal__body">
+                <div id="actionModalContent">
+                    <!-- Action content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Approval Modal -->
+    <div id="bulkApprovalModal" class="modal hidden">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3><i class="fas fa-check-double"></i> Bulk Property Actions</h3>
+                <button class="modal__close">&times;</button>
+            </div>
+            <div class="modal__body">
+                <div class="bulk-actions-content">
+                    <div class="bulk-action-group">
+                        <h4>Select Action:</h4>
+                        <div class="bulk-action-buttons">
+                            <button class="btn btn--success btn--full-width" onclick="bulkApproveProperties()">
+                                <i class="fas fa-check"></i> Approve Selected Properties
+                            </button>
+                            <button class="btn btn--danger btn--full-width" onclick="bulkRejectProperties()">
+                                <i class="fas fa-times"></i> Reject Selected Properties
+                            </button>
+                            <button class="btn btn--warning btn--full-width" onclick="bulkFeatureProperties()">
+                                <i class="fas fa-star"></i> Feature Selected Properties
+                            </button>
+                        </div>
+                    </div>
+                    <div class="selected-properties-info">
+                        <p><strong><span id="selectedPropertiesCount">0</span></strong> properties selected</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Content Modal -->
+    <div id="addContentModal" class="modal hidden">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3><i class="fas fa-plus-circle"></i> Add New Content</h3>
+                <button class="modal__close">&times;</button>
+            </div>
+            <div class="modal__body">
+                <div class="add-content-tabs">
+                    <button class="content-tab active" data-tab="testimonial">
+                        <i class="fas fa-quote-right"></i> Testimonial
+                    </button>
+                    <button class="content-tab" data-tab="featured">
+                        <i class="fas fa-star"></i> Featured Property
+                    </button>
+                </div>
+                <div class="content-tab-panels">
+                    <div class="content-panel active" data-panel="testimonial">
+                        <form id="addTestimonialForm">
+                            <div class="form-group">
+                                <label class="form-label">Customer Name</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" name="location" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Testimonial Text</label>
+                                <textarea name="text" class="form-control" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Rating</label>
+                                <select name="rating" class="form-control" required>
+                                    <option value="5">5 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="featured">
+                                    <span>Feature this testimonial</span>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn--primary btn--full-width">
+                                <i class="fas fa-plus"></i> Add Testimonial
+                            </button>
+                        </form>
+                    </div>
+                    <div class="content-panel" data-panel="featured">
+                        <div class="featured-properties-list" id="availablePropertiesList">
+                            <!-- Available properties will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inquiry Response Modal -->
+    <div id="inquiryResponseModal" class="modal hidden">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3><i class="fas fa-reply"></i> Respond to Inquiry</h3>
+                <button class="modal__close">&times;</button>
+            </div>
+            <div class="modal__body">
+                <div id="inquiryDetails">
+                    <!-- Inquiry details will be loaded here -->
+                </div>
+                <form id="inquiryResponseForm">
+                    <div class="form-group">
+                        <label class="form-label">Your Response</label>
+                        <textarea name="response" class="form-control" rows="4" required placeholder="Type your response to the customer..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">
+                        <i class="fas fa-paper-plane"></i> Send Response
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
